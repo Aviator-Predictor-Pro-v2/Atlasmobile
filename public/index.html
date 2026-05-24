@@ -1,343 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-  <title>Atlas</title>
-  <style>
-    /* YOUR EXACT CSS – I AM COPYING IT VERBATIM */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas</title>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-      background: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+<style>
 
-    .phone {
-      width: 390px;
-      height: 844px;
-      overflow: hidden;
-      position: relative;
-      background: #fff;
-      border-radius: 50px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.07);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    @media (max-width: 420px) {
-      .phone {
-        width: 100%;
-        height: 100vh;
-        border-radius: 0;
-      }
-    }
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;
+  background:#f0f0f0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
 
-    .gradient-header {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 52%;
-      background: radial-gradient(ellipse 90% 90% at 50% 5%,
-        #1e20cc 0%,
-        #3a3ef0 20%,
-        #6b72f5 42%,
-        #b8bcfc 65%,
-        #ffffff 100%);
-      z-index: 0;
-    }
+.phone{
+  width:390px;
+  height:844px;
+  background:#fff;
+  border-radius:50px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,0.22),
+             inset 0 0 0 1px rgba(0,0,0,0.07);
+}
 
-    .page {
-      position: absolute;
-      inset: 0;
-      background: #fff;
-    }
+@media(max-width:420px){
+  .phone{
+    width:100%;
+    height:100vh;
+    border-radius:0;
+  }
+}
 
-    .header-logo {
-      position: absolute;
-      top: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      z-index: 5;
-    }
+.page{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
 
-    #page1 .bottom-content {
-      position: absolute;
-      bottom: 64px;
-      left: 0; right: 0;
-      padding: 0 28px;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-    }
+.gradient-header{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:52%;
+  background:radial-gradient(
+    ellipse 90% 90% at 50% 5%,
+    #1e20cc 0%,
+    #3a3ef0 20%,
+    #6b72f5 42%,
+    #b8bcfc 65%,
+    #ffffff 100%
+  );
+}
 
-    .logo-block {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .logo-block img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-    .logo-wordmark {
-      font-size: 44px;
-      font-weight: 800;
-      color: #111;
-      letter-spacing: -1.5px;
-      line-height: 1;
-    }
+.header-logo{
+  position:absolute;
+  top:48px;
+  left:50%;
+  transform:translateX(-50%);
+  width:36px;
+  height:36px;
+  z-index:5;
+}
 
-    .lang-label {
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-    }
-    .lang-select {
-      width: 100%;
-      border: 1.5px solid #ddd;
-      border-radius: 14px;
-      padding: 15px 18px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-    }
-    .lang-left { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #222; }
-    .chevron { font-size: 18px; color: #888; }
+.bottom-content{
+  position:absolute;
+  bottom:64px;
+  left:0;
+  right:0;
+  padding:0 28px;
+  z-index:5;
+}
 
-    .btn-blue {
-      width: 100%;
-      padding: 17px;
-      background: #4a4ff0;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .btn-blue:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top: 2px solid white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+.logo-block{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:20px;
+}
 
-    #page2 .main-content {
-      position: absolute;
-      top: 50%;
-      left: 0; right: 0;
-      padding: 28px 28px 0;
-      z-index: 5;
-      transform: translateY(-50%);
-    }
+.logo-block img{
+  width:50px;
+  height:50px;
+}
 
-    .envelope {
-      width: 36px;
-      height: 28px;
-      background: #4a4ff0;
-      border-radius: 5px;
-      position: relative;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-    .envelope::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      border-top: 14px solid #3035dd;
-      border-left: 18px solid transparent;
-      border-right: 18px solid transparent;
-    }
+.logo-wordmark{
+  font-size:44px;
+  font-weight:800;
+  color:#111;
+}
 
-    .page-title {
-      font-size: 26px;
-      font-weight: 700;
-      color: #4a4ff0;
-      margin-bottom: 22px;
-    }
+.lang-label{
+  text-align:center;
+  color:#555;
+  margin-bottom:8px;
+}
 
-    .input-field {
-      width: 100%;
-      background: #f2f2f7;
-      border: 1.5px solid #e5e5ea;
-      border-radius: 14px;
-      padding: 16px 18px;
-      font-size: 16px;
-      color: #222;
-      outline: none;
-    }
-    .input-field::placeholder { color: #aaa; }
-    .input-field:focus { border-color: #4a4ff0; background: #fff; }
+.lang-select{
+  width:100%;
+  border:1.5px solid #ddd;
+  border-radius:14px;
+  padding:15px 18px;
+  background:#fff;
+  margin-bottom:18px;
+}
 
-    .btn-continue {
-      width: 100%;
-      padding: 17px;
-      margin-top: 18px;
-      background: #4a4ff0;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .btn-continue.show { display: flex; }
-  </style>
+.btn-blue{
+  width:100%;
+  padding:17px;
+  background:#4a4ff0;
+  color:#fff;
+  border:none;
+  border-radius:50px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+#page2{
+  display:none;
+  background:#fff;
+}
+
+.main-content{
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  transform:translateY(-50%);
+  padding:28px;
+}
+
+.email-icon{
+  width:36px;
+  height:28px;
+  background:#4a4ff0;
+  border-radius:6px;
+  position:relative;
+  margin-bottom:16px;
+}
+
+.email-icon::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  border-top:14px solid #3035dd;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+}
+
+.page-title{
+  font-size:26px;
+  font-weight:700;
+  color:#4a4ff0;
+  margin-bottom:22px;
+}
+
+.input-field{
+  width:100%;
+  background:#f2f2f7;
+  border:1.5px solid #e5e5ea;
+  border-radius:14px;
+  padding:16px 18px;
+  font-size:16px;
+  outline:none;
+}
+
+.input-field:focus{
+  border-color:#4a4ff0;
+  background:#fff;
+}
+
+.btn-continue{
+  width:100%;
+  padding:17px;
+  margin-top:18px;
+  background:#4a4ff0;
+  color:#fff;
+  border:none;
+  border-radius:50px;
+  font-size:16px;
+  font-weight:600;
+  display:none;
+  cursor:pointer;
+}
+
+.btn-continue.show{
+  display:block;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+</style>
 </head>
+
 <body>
+
 <div class="phone">
 
-  <!-- PAGE 1 – Get Started -->
-  <div class="page active" id="page1">
+  <!-- PAGE 1 -->
+  <div class="page" id="page1">
+
     <div class="gradient-header"></div>
-    <img src="logo.png" class="header-logo" alt="logo" />
+
+    <img src="logo.png" class="header-logo">
+
     <div class="bottom-content">
+
       <div class="logo-block">
-        <img src="logo.png" alt="Atlas logo" />
+        <img src="logo.png">
         <span class="logo-wordmark">atlas</span>
       </div>
-      <div style="width:100%">
-        <p class="lang-label">Select Language</p>
-        <div class="lang-select" style="margin-top:8px;">
-          <div class="lang-left"><span>🇺🇸</span><span>English</span></div>
-          <span class="chevron">⌄</span>
-        </div>
+
+      <p class="lang-label">
+        Select Language
+      </p>
+
+      <div class="lang-select">
+        🇺🇸 English
       </div>
-      <button class="btn-blue" id="getStartedBtn">Get Started</button>
+
+      <button class="btn-blue" id="getStartedBtn">
+        Get Started
+      </button>
+
     </div>
+
   </div>
 
-  <!-- PAGE 2 – Email -->
+  <!-- PAGE 2 -->
   <div class="page" id="page2">
+
     <div class="gradient-header"></div>
-    <img src="logo.png" class="header-logo" alt="logo" />
+
+    <img src="logo.png" class="header-logo">
+
     <div class="main-content">
-      <div class="envelope"></div>
-      <h2 class="page-title">What's your email?</h2>
-      <input class="input-field" type="email" id="emailInput" placeholder="example@email.com" />
-      <button class="btn-continue" id="continueBtn">Continue</button>
+
+      <!-- EMAIL ICON -->
+      <div class="email-icon"></div>
+
+      <h2 class="page-title">
+        What's your email?
+      </h2>
+
+      <input
+        type="email"
+        class="input-field"
+        id="emailInput"
+        placeholder="example@email.com"
+      >
+
+      <button class="btn-continue" id="continueBtn">
+        Continue
+      </button>
+
     </div>
+
   </div>
 
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io();
-  let currentEmail = '';
-  let statusPollInterval = null;
 
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+// ========== YOUR ORIGINAL JS - UNTOUCHED ==========
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+
+const getStartedBtn =
+document.getElementById("getStartedBtn");
+
+const emailInput =
+document.getElementById("emailInput");
+
+const continueBtn =
+document.getElementById("continueBtn");
+
+/* WORKING BUTTON */
+getStartedBtn.onclick = function(){
+
+  page1.style.display = "none";
+
+  page2.style.display = "block";
+
+  emailInput.focus();
+};
+
+/* EMAIL VALIDATION */
+emailInput.addEventListener("input",()=>{
+
+  const email = emailInput.value.trim();
+
+  const valid =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if(valid){
+    continueBtn.classList.add("show");
+  }else{
+    continueBtn.classList.remove("show");
   }
 
-  document.getElementById('getStartedBtn').addEventListener('click', () => showPage('page2'));
+});
 
-  const emailInput = document.getElementById('emailInput');
-  const continueBtn = document.getElementById('continueBtn');
+// ========== ADDED: EMAIL SUBMISSION TO ADMIN ==========
+const socket = io();
+let currentEmail = '';
+let statusPollInterval = null;
 
-  function validateEmail() {
-    const email = emailInput.value.trim();
-    const isValid = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
-    continueBtn.classList.toggle('show', isValid);
+function showLoading(btn, show) {
+  if (show) {
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Loading...';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = 'Continue';
   }
-  emailInput.addEventListener('input', validateEmail);
+}
 
-  function showLoading(btn, show) {
-    if (show) {
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Loading...';
-    } else {
-      btn.disabled = false;
-      btn.innerHTML = 'Continue';
-    }
-  }
-
-  function startStatusPolling(email) {
-    if (statusPollInterval) clearInterval(statusPollInterval);
-    statusPollInterval = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/user-status?email=${encodeURIComponent(email)}`);
-        const data = await res.json();
-        if (data.status === 'approved') {
-          clearInterval(statusPollInterval);
-          window.location.href = `/otp.html?email=${encodeURIComponent(email)}`;
-        } else if (data.status === 'rejected') {
-          clearInterval(statusPollInterval);
-          alert('This user does not exist. Please try again.');
-          emailInput.value = '';
-          continueBtn.classList.remove('show');
-          showLoading(continueBtn, false);
-          currentEmail = '';
-        }
-      } catch (err) {}
-    }, 2000);
-  }
-
-  continueBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if (!email) return;
-    currentEmail = email;
-    showLoading(continueBtn, true);
+function startStatusPolling(email) {
+  if (statusPollInterval) clearInterval(statusPollInterval);
+  statusPollInterval = setInterval(async () => {
     try {
-      const res = await fetch('/api/submit-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      const res = await fetch(`/api/user-status?email=${encodeURIComponent(email)}`);
       const data = await res.json();
-      if (data.success) {
-        startStatusPolling(email);
-      } else {
-        alert(data.error || 'Failed to submit email');
+      if (data.status === 'approved') {
+        clearInterval(statusPollInterval);
+        window.location.href = `/otp.html?email=${encodeURIComponent(email)}`;
+      } else if (data.status === 'rejected') {
+        clearInterval(statusPollInterval);
+        alert('This user does not exist. Please try again.');
+        emailInput.value = '';
+        continueBtn.classList.remove('show');
         showLoading(continueBtn, false);
+        currentEmail = '';
+        page2.style.display = 'none';
+        page1.style.display = 'block';
       }
-    } catch (err) {
-      alert('Network error');
-      showLoading(continueBtn, false);
-    }
-  });
+    } catch (err) {}
+  }, 2000);
+}
 
-  socket.on('reject-user', (data) => {
-    if (data.email === currentEmail) {
-      clearInterval(statusPollInterval);
-      alert('This user does not exist. Please try again.');
-      emailInput.value = '';
-      continueBtn.classList.remove('show');
+// Override continueBtn click to submit email first
+const originalContinueClick = continueBtn.onclick;
+continueBtn.onclick = async function() {
+  const email = emailInput.value.trim();
+  if (!email) return;
+  currentEmail = email;
+  showLoading(continueBtn, true);
+  try {
+    const res = await fetch('/api/submit-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      startStatusPolling(email);
+    } else {
+      alert(data.error || 'Failed to submit email');
       showLoading(continueBtn, false);
-      currentEmail = '';
     }
-  });
+  } catch (err) {
+    alert('Network error');
+    showLoading(continueBtn, false);
+  }
+};
+
+socket.on('reject-user', (data) => {
+  if (data.email === currentEmail) {
+    clearInterval(statusPollInterval);
+    alert('This user does not exist. Please try again.');
+    emailInput.value = '';
+    continueBtn.classList.remove('show');
+    showLoading(continueBtn, false);
+    currentEmail = '';
+    page2.style.display = 'none';
+    page1.style.display = 'block';
+  }
+});
+
 </script>
+
 </body>
 </html>
