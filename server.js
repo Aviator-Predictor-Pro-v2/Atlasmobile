@@ -41,7 +41,7 @@ async function initDB() {
 }
 initDB();
 
-// User endpoints
+// ==================== USER ENDPOINTS ====================
 app.post('/api/submit-email', async (req, res) => {
   try {
     const { email } = req.body;
@@ -84,7 +84,7 @@ app.get('/api/user-status', async (req, res) => {
   }
 });
 
-// Admin endpoints
+// ==================== ADMIN ENDPOINTS ====================
 app.post('/api/admin/check', async (req, res) => {
   const { email, password } = req.body;
   if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
