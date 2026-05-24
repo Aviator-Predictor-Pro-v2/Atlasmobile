@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
