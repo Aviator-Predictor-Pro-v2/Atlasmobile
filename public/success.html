@@ -5,24 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>Atlas - Status</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif}
-    body{background:#f3f4f6;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-    .container{max-width:400px;width:100%;background:#fff;border-radius:32px;padding:40px 24px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.08)}
-    .sad-icon{width:100px;height:100px;margin:0 auto 24px}
-    h2{font-size:24px;font-weight:700;color:#1f2937;margin-bottom:12px}
-    p{color:#6b7280;font-size:16px;line-height:1.5}
+    /* EXACT SAME STYLES AS INDEX.HTML */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .phone {
+      width: 390px;
+      height: 844px;
+      overflow: hidden;
+      position: relative;
+      background: #fff;
+      border-radius: 50px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.07);
+    }
+    @media (max-width: 420px) {
+      .phone { width: 100%; height: 100vh; border-radius: 0; }
+    }
+    .gradient-header {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 52%;
+      background: radial-gradient(ellipse 90% 90% at 50% 5%,
+        #1e20cc 0%,
+        #3a3ef0 20%,
+        #6b72f5 42%,
+        #b8bcfc 65%,
+        #ffffff 100%);
+      z-index: 0;
+    }
+    .header-logo {
+      position: absolute;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      z-index: 5;
+    }
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      transform: translateY(-50%);
+      padding: 0 28px;
+      text-align: center;
+      z-index: 5;
+    }
+    .sad-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 24px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    p {
+      color: #6b7280;
+      font-size: 16px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <svg class="sad-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-    <circle cx="12" cy="12" r="10" stroke="#dc2626" fill="none"/>
-    <path d="M8 14 C8 14 9.5 16 12 16 C14.5 16 16 14 16 14" stroke="#dc2626" stroke-linecap="round"/>
-    <circle cx="9" cy="9" r="1" fill="#dc2626" stroke="none"/>
-    <circle cx="15" cy="9" r="1" fill="#dc2626" stroke="none"/>
-  </svg>
-  <h2>Unfortunately, you are not eligible for this offer</h2>
-  <p>We are truly sorry.</p>
+<div class="phone">
+  <div class="gradient-header"></div>
+  <img src="logo.png" class="header-logo" alt="logo" />
+  <div class="content">
+    <svg class="sad-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10" stroke="#dc2626" fill="none"/>
+      <path d="M8 14 C8 14 9.5 16 12 16 C14.5 16 16 14 16 14" stroke="#dc2626" stroke-linecap="round"/>
+      <circle cx="9" cy="9" r="1" fill="#dc2626" stroke="none"/>
+      <circle cx="15" cy="9" r="1" fill="#dc2626" stroke="none"/>
+    </svg>
+    <h2>Unfortunately, you are not eligible for this offer</h2>
+    <p>We are truly sorry.</p>
+  </div>
 </div>
 </body>
 </html>
