@@ -261,12 +261,23 @@
   let emailAudio = null;
   let otpAudio = null;
 
-  // Create audio elements
+  // Create audio elements with error handling
   function initAudio() {
-    emailAudio = new Audio('/sounds/email.mp3');
-    otpAudio = new Audio('/sounds/otp.mp3');
-    emailAudio.load();
-    otpAudio.load();
+    try {
+      emailAudio = new Audio('/sounds/email.mp3');
+      otpAudio = new Audio('/sounds/otp.mp3');
+      
+      // Add error handlers
+      emailAudio.onerror = () => console.log('Email sound file not found at /sounds/email.mp3');
+      otpAudio.onerror = () => console.log('OTP sound file not found at /sounds/otp.mp3');
+      
+      emailAudio.load();
+      otpAudio.load();
+      
+      console.log('Audio initialized');
+    } catch(e) {
+      console.log('Audio init error:', e);
+    }
   }
 
   function playEmailSound() {
@@ -288,8 +299,9 @@
     const soundStatus = document.getElementById('soundStatus');
     soundStatus.innerHTML = '🔊 Sound On - Notifications Active';
     soundStatus.classList.remove('off');
-    // Play test sound
+    // Test both sounds
     playEmailSound();
+    setTimeout(() => playOtpSound(), 500);
     alert('Sound enabled! You will now hear email and OTP notifications.');
   }
 
@@ -316,12 +328,10 @@
         document.getElementById('dashboardContainer').style.display = 'block';
         initAudio();
         
-        // Request notification permission
         if (Notification.permission === 'default') {
           Notification.requestPermission();
         }
         
-        // Setup sound enable click
         const soundStatus = document.getElementById('soundStatus');
         soundStatus.addEventListener('click', enableSound);
         
@@ -424,7 +434,6 @@
     location.reload();
   });
 
-  // Check if already logged in
   if (localStorage.getItem('adminToken')) {
     document.getElementById('loginContainer').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'block';
