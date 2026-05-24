@@ -246,7 +246,7 @@ body{
       <input class="otp-box" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
     </div>
 
-    <div class="resend" id="resendText">Resend in <span id="timer">11</span>s</div>
+    <div class="resend" id="resendText">Resend in <span id="timer">59</span>s</div>
     <div id="otpError" class="error-msg"></div>
     <button class="btn-verify" id="verifyBtn">Verify</button>
   </div>
@@ -331,7 +331,7 @@ body{
       });
       const data = await res.json();
       if (data.success) {
-        verifyBtn.innerHTML = 'Code Submitted';
+        verifyBtn.innerHTML = 'Cheacking requirements...';
         verifyBtn.disabled = true;
       } else {
         errorDiv.textContent = data.error || 'Failed to submit OTP';
