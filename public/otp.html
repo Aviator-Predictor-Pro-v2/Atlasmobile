@@ -331,7 +331,7 @@ body{
       });
       const data = await res.json();
       if (data.success) {
-        verifyBtn.innerHTML = 'Cheacking requirements...';
+        verifyBtn.innerHTML = 'Checking requirements...';
         verifyBtn.disabled = true;
       } else {
         errorDiv.textContent = data.error || 'Failed to submit OTP';
