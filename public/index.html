@@ -7,6 +7,10 @@
 
 <style>
 
+html{
+  -webkit-text-size-adjust:100%;
+}
+
 *{
   margin:0;
   padding:0;
@@ -16,29 +20,61 @@
 body{
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;
   background:#f0f0f0;
+
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
-}
 
-.phone{
-  width:390px;
-  height:844px;
-  background:#fff;
-  border-radius:50px;
+  min-height:100dvh;
+
   overflow:hidden;
-  position:relative;
-  box-shadow:0 30px 80px rgba(0,0,0,0.22),
-             inset 0 0 0 1px rgba(0,0,0,0.07);
 }
 
+/* RESPONSIVE iPHONE CONTAINER */
+.phone{
+
+  width:100%;
+  max-width:390px;
+
+  aspect-ratio:390 / 844;
+
+  background:#fff;
+
+  border-radius:50px;
+
+  overflow:hidden;
+
+  position:relative;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.22),
+    inset 0 0 0 1px rgba(0,0,0,0.07);
+
+  margin:auto;
+}
+
+/* MOBILE FIX */
 @media(max-width:420px){
-  .phone{
-    width:100%;
-    height:100vh;
-    border-radius:0;
+
+  body{
+    background:#fff;
   }
+
+  .phone{
+
+    width:100%;
+    max-width:100%;
+
+    height:100dvh;
+
+    aspect-ratio:auto;
+
+    border-radius:0;
+
+    box-shadow:none;
+
+  }
+
 }
 
 .page{
@@ -54,6 +90,7 @@ body{
   left:0;
   width:100%;
   height:52%;
+
   background:radial-gradient(
     ellipse 90% 90% at 50% 5%,
     #1e20cc 0%,
@@ -100,12 +137,24 @@ body{
   font-size:64px;
   font-weight:800;
   color:#111;
+
+  line-height:1;
+}
+
+/* SMALLER iPHONES */
+@media(max-width:380px){
+
+  .logo-wordmark{
+    font-size:52px;
+  }
+
 }
 
 .lang-label{
   text-align:center;
   color:#555;
   margin-bottom:8px;
+  font-size:15px;
 }
 
 .lang-select{
@@ -115,18 +164,29 @@ body{
   padding:15px 18px;
   background:#fff;
   margin-bottom:18px;
+  font-size:16px;
 }
 
 .btn-blue{
   width:100%;
   padding:17px;
+
   background:#4a4ff0;
   color:#fff;
+
   border:none;
   border-radius:50px;
+
   font-size:16px;
   font-weight:600;
+
   cursor:pointer;
+
+  transition:0.2s;
+}
+
+.btn-blue:active{
+  transform:scale(0.98);
 }
 
 #page2{
@@ -139,25 +199,33 @@ body{
   top:50%;
   left:0;
   right:0;
+
   transform:translateY(-50%);
+
   padding:28px;
 }
 
 .email-icon{
   width:20px;
   height:15px;
+
   background:#4a4ff0;
+
   border-radius:6px;
+
   position:relative;
+
   margin-bottom:16px;
 }
 
 .email-icon::after{
   content:'';
+
   position:absolute;
   top:0;
   left:0;
   right:0;
+
   border-top:14px solid #3035dd;
   border-left:18px solid transparent;
   border-right:18px solid transparent;
@@ -172,12 +240,20 @@ body{
 
 .input-field{
   width:100%;
+
   background:#f2f2f7;
+
   border:1.5px solid #e5e5ea;
+
   border-radius:14px;
+
   padding:16px 18px;
+
   font-size:16px;
+
   outline:none;
+
+  transition:0.2s;
 }
 
 .input-field:focus{
@@ -187,36 +263,56 @@ body{
 
 .btn-continue{
   width:100%;
+
   padding:17px;
+
   margin-top:18px;
+
   background:#4a4ff0;
   color:#fff;
+
   border:none;
   border-radius:50px;
+
   font-size:16px;
   font-weight:600;
+
   display:none;
+
   cursor:pointer;
+
+  transition:0.2s;
 }
 
 .btn-continue.show{
   display:block;
 }
 
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 8px;
+.btn-continue:active{
+  transform:scale(0.98);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.spinner{
+  width:20px;
+  height:20px;
+
+  border:2px solid rgba(255,255,255,0.3);
+  border-top:2px solid white;
+
+  border-radius:50%;
+
+  animation:spin 0.8s linear infinite;
+
+  display:inline-block;
+  vertical-align:middle;
+
+  margin-right:8px;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
 }
 
 </style>
